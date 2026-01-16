@@ -10,36 +10,6 @@ data "aws_ami" "amazon_linux" {
 }
 
 
-# Main EC2 instance for the web server
-resource "aws_instance" "main" {
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = var.ec2_instance_type
-
-  # Attach IAM role for S3 access
-  iam_instance_profile = aws_iam_instance_profile.grocery_ec2_profile.name
-
-  # Network and access configuration
-  key_name               = aws_key_pair.deployer.key_name
-  vpc_security_group_ids = [aws_security_group.allow_ssh_and_shop.id]
-  subnet_id              = aws_subnet.grocery_shop_public_subnet_1.id
-
-  # Bootstrap script to configure the application and DB connection
-  user_data = templatefile("userdata.sh", {
-    aws_region               = var.aws_region
-    s3_bucket_name           = var.s3_bucket_name
-    rds_endpoint             = aws_db_instance.postgres.address
-    rds_master_password      = aws_db_instance.postgres.password
-    grocery_username         = var.grocery_username
-    grocery_db_name          = var.grocery_db_name
-    grocery_user_db_password = var.grocery_user_db_password
-  })
-
-  tags = {
-    Name = "grocery-web-server"
-  }
-}
-
-
 # Register public SSH key for instance access
 resource "aws_key_pair" "deployer" {
   key_name   = var.ssh_key_pair_name

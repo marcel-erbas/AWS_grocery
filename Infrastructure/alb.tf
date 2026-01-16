@@ -71,11 +71,3 @@ resource "aws_lb_listener" "grocery_shop_http" {
     target_group_arn = aws_lb_target_group.grocery_shop_tg.arn
   }
 }
-
-
-# Attach your EC2 instance to the target group manually
-resource "aws_lb_target_group_attachment" "grocery_shop_attachment" {
-  target_group_arn = aws_lb_target_group.grocery_shop_tg.arn
-  target_id        = aws_instance.main.id
-  port             = 5000
-}
