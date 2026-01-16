@@ -21,7 +21,7 @@ resource "aws_instance" "main" {
   # Network and access configuration
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.allow_ssh_and_shop.id]
-  subnet_id              = aws_subnet.grocery_shop_public_subnet.id
+  subnet_id              = aws_subnet.grocery_shop_public_subnet_1.id
 
   # Bootstrap script to configure the application and DB connection
   user_data = templatefile("userdata.sh", {
@@ -55,8 +55,8 @@ data "http" "myip" {
 
 # Security group for web server traffic
 resource "aws_security_group" "allow_ssh_and_shop" {
-  name        = "ec2-sg-allow-ssh-and-shop"
-  description = "allow ssh and shop access"
+  name        = "grocery-shop-ec2-sg"
+  description = "allow ssh and load balancer access"
   vpc_id      = aws_vpc.grocery_shop_vpc.id
 
   # Restricted SSH access only for the administrator's current IP
@@ -67,20 +67,24 @@ resource "aws_security_group" "allow_ssh_and_shop" {
     cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
   }
 
-  # Public access to the shop application (Port 5000)
+  # Access to the shop application (Port 5000) ONLY from the Load Balancer
   ingress {
-    from_port   = 5000
-    to_port     = 5000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Jeder im Internet darf den Shop sehen
+    from_port = 5000
+    to_port   = 5000
+    protocol  = "tcp"
+    # This ensures only the ALB can talk to Docker container
+    security_groups = [aws_security_group.grocery_shop_alb_sg.id]
   }
 
-  # Allow all outgoing traffic
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "grocery-shop-ec2-sg"
   }
 }
 

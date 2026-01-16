@@ -35,7 +35,7 @@ resource "aws_db_instance" "postgres" {
 resource "aws_db_subnet_group" "main" {
   name = "grocery-db-subnet-group"
   # Allow inbound PostgreSQL traffic only from the application security group
-  subnet_ids = [aws_subnet.grocery_shop_public_subnet.id, aws_subnet.grocery_shop_private_subnet.id]
+  subnet_ids = [aws_subnet.grocery_shop_public_subnet_1.id, aws_subnet.grocery_shop_private_subnet.id]
 
   tags = {
     Name = "Grocery DB Subnet Group"

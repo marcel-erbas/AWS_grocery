@@ -1,4 +1,4 @@
-# The public IP address of the EC2 instance for direct access
+# The public IP address of the EC2 instance
 output "instance_public_ip" {
   description = "public ip from ec2 instance"
   value       = aws_instance.main.public_ip
@@ -12,10 +12,10 @@ output "ssh_connection_command" {
 }
 
 
-# The application URL to access the web shop in a browser
-output "shop_url" {
-  description = "direct url to access the grocery shop"
-  value       = "http://${aws_instance.main.public_ip}:5000"
+# The load balancer URL to access the web shop in a browser
+output "alb_dns_name" {
+  description = "The DNS name of the load balancer"
+  value       = "http://${aws_lb.grocery_shop_alb.dns_name}"
 }
 
 
