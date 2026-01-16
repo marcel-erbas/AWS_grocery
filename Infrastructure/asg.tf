@@ -67,3 +67,20 @@ resource "aws_autoscaling_group" "grocery_shop_asg" {
     propagate_at_launch = true
   }
 }
+
+
+# Scaling Policy: Scale based on average CPU utilization
+resource "aws_autoscaling_policy" "cpu_scaling" {
+  name                   = "grocery-shop-cpu-scaling"
+  autoscaling_group_name = aws_autoscaling_group.grocery_shop_asg.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    # Target 70% CPU usage. If it goes higher, add instances (up to max_size).
+    # If it stays significantly lower, remove instances (down to min_size).
+    target_value = 70.0
+  }
+}
