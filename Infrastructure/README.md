@@ -25,28 +25,22 @@ Before you begin, ensure you have the following installed and configured:
     db_password              = "secureMasterPassword123!"
     ```
 
-    > **Note:** Passwords should be strong. The S3 bucket name must be globally unique.
-
 ## Deployment Steps
 
 1.  **Initialize Terraform**:
-    Downloads the necessary providers.
     ```bash
     terraform init
     ```
 
 2.  **Review the Plan**:
-    Shows what resources will be created.
     ```bash
     terraform plan
     ```
 
 3.  **Apply the Infrastructure**:
-    Provisions the resources in AWS.
     ```bash
     terraform apply
     ```
-    Confirm with `yes` when prompted.
 
 ## Accessing the Application
 
@@ -59,13 +53,37 @@ alb_dns_name = "http://grocery-shop-alb-..."
 *   **Web App**: Open the `alb_dns_name` URL in your browser.
 *   **Wait Time**: It may take a few minutes for the EC2 instances to launch, install Docker, and start the application.
 
-## Infrastructure Overview
+## Application Architecture
 
-*   **VPC**: Custom VPC with Public and Private Subnets.
-*   **ALB**: Application Load Balancer (Public) handles traffic.
-*   **EC2**: Auto Scaling Group (Public Subnets) runs the application containers.
-*   **RDS**: PostgreSQL Database (Private Subnets) stores data.
-*   **S3**: Bucket for storing user uploads (Avatars).
+![Infrastructure Architecture](architecture_diagram.png)
+
+The infrastructure consists of a high-availability architecture designed for security and scalability:
+
+*   **Public Layer (DMZ)**: An **Application Load Balancer (ALB)** in public subnets handles all incoming HTTP traffic.
+*   **Compute Layer**: An **Auto Scaling Group** manages EC2 instances. Due to specific account restrictions (SCP), these run in public subnets but are protected by Security Groups restricting access to the ALB.
+*   **Data Layer**: A **PostgreSQL RDS** database resides in an isolated **Private Network** (spanning two Availability Zones), ensuring no direct internet access.
+*   **Storage**: An **S3 Bucket** stores user uploads (avatars), securely accessed via IAM Roles.
+*   **Monitoring**: A **CloudWatch Dashboard** provides visibility into CPU, Request Counts, and Health Status.
+
+## Project Structure
+
+```text
+Infrastructure/
+├── architecture_diagram.png  # Visual representation of the architecture
+├── network.tf                # VPC, Subnets, Gateways, Route Tables
+├── ec2.tf                    # Security Groups, IAM Roles, Key Pairs
+├── asg.tf                    # Launch Templates, Auto Scaling Group
+├── alb.tf                    # Load Balancer, Target Groups, Listeners
+├── rds.tf                    # RDS Database, Subnet Groups
+├── s3.tf                     # S3 Bucket, Public Access Block, Policies
+├── dashboard.tf              # CloudWatch Monitoring Dashboard
+├── variables.tf              # Input variable definitions
+├── outputs.tf                # Output values (URL, IDs)
+├── provider.tf               # AWS Provider configuration
+├── userdata.sh               # Startup script for EC2 instances
+├── default_user.png          # Default asset for S3
+└── README.md                 # This documentation
+```
 
 ## Cleaning Up
 
