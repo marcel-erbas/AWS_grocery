@@ -1,0 +1,29 @@
+# Terraform Variables Example
+# Copy this file to 'terraform.tfvars' and replace the values with your own.
+
+# AWS Region to deploy resources (e.g. eu-central-1, us-east-1)
+aws_region = "eu-central-1"
+
+# AWS CLI Profile to use (from ~/.aws/credentials)
+aws_profile = "default"
+
+# Name of the SSH Key Pair in AWS (and the local file without .pub extension)
+ssh_key_pair_name = "key-aws-ssh"
+
+# Globally unique name for the S3 Bucket (must be unique across all AWS accounts)
+s3_bucket_name = "your-unique-bucket-name-12345"
+
+# Database name
+grocery_db_name = "grocerydb"
+
+# Database Master Username
+db_username = "postgres_master"
+
+# Database Master Password (must be strong, >8 chars)
+db_password = "ChangeThisStrongPassword123!"
+
+# Application Database Username
+grocery_username = "grocery_app_user"
+
+# Application Database Password
+grocery_user_db_password = "ChangeThisAppPassword123!"

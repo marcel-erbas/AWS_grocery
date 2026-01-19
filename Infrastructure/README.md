@@ -12,18 +12,12 @@ Before you begin, ensure you have the following installed and configured:
 
 ## Configuration
 
-1.  Create a `terraform.tfvars` file (or use the existing one) with the following variables:
-
-    ```hcl
-    aws_region               = "eu-central-1"
-    aws_profile              = "default"
-    ssh_key_pair_name        = "key-aws-ssh"       # Name of your key file (without .pub)
-    s3_bucket_name           = "your-unique-bucket-name"
-    grocery_db_name          = "grocerydb"
-    grocery_username         = "grocery_user"
-    grocery_user_db_password = "secureUserPassword123!"
-    db_password              = "secureMasterPassword123!"
+1.  **Configure Variables**:
+    Copy the example file to create your local deployment configuration:
+    ```bash
+    cp terraform.tfvars.example terraform.tfvars
     ```
+    Then edit `terraform.tfvars` with your specific values (Region, Passwords, etc.).
 
 ## Deployment Steps
 
