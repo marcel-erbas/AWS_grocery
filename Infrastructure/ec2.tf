@@ -78,11 +78,7 @@ resource "aws_iam_role" "grocery_ec2_role" {
 }
 
 
-# Attach S3 full access policy to the IAM role
-resource "aws_iam_role_policy_attachment" "s3_access" {
-  role       = aws_iam_role.grocery_ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
+
 
 
 # Instance profile wrapper for the IAM role to be used by EC2
