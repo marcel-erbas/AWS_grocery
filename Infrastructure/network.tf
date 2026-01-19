@@ -77,7 +77,18 @@ resource "aws_subnet" "grocery_shop_private_subnet" {
   availability_zone = data.aws_availability_zones.available.names[1]
 
   tags = {
-    Name = "grocery-shop-private-subnet"
+    Name = "grocery-shop-private-subnet-1"
+  }
+}
+
+# Isolated private subnet 2 (AZ 1)
+resource "aws_subnet" "grocery_shop_private_subnet_2" {
+  vpc_id            = aws_vpc.grocery_shop_vpc.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = {
+    Name = "grocery-shop-private-subnet-2"
   }
 }
 
