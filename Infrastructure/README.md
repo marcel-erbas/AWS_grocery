@@ -54,7 +54,11 @@ alb_dns_name = "http://grocery-shop-alb-..."
 The infrastructure consists of a high-availability architecture designed for security and scalability:
 
 *   **Public Layer (DMZ)**: An **Application Load Balancer (ALB)** in public subnets handles all incoming HTTP traffic.
-*   **Compute Layer**: An **Auto Scaling Group** manages EC2 instances. Due to specific account restrictions (SCP), these run in public subnets but are protected by Security Groups restricting access to the ALB.
+*   **Compute Layer**: An **Auto Scaling Group** manages EC2 instances. 
+    > [!NOTE]
+    > **Best Practice**: Ideally, these instances should reside in a **Private Subnet** and access the internet via a NAT Gateway.
+    >
+    > **Current Limitation**: Due to permission restrictions in the training account (`ec2:AllocateAddress`), creating a NAT Gateway was not possible. Therefore, instances are placed in **Public Subnets** but are secured via Security Groups that only allow traffic from the ALB.
 *   **Data Layer**: A **PostgreSQL RDS** database resides in an isolated **Private Network** (spanning two Availability Zones), ensuring no direct internet access.
 *   **Storage**: An **S3 Bucket** stores user uploads (avatars), securely accessed via IAM Roles.
 *   **Monitoring**: A **CloudWatch Dashboard** provides visibility into CPU, Request Counts, and Health Status.
