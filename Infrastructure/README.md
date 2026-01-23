@@ -58,12 +58,15 @@ The infrastructure consists of a high-availability architecture designed for sec
 *   **Data Layer**: A **PostgreSQL RDS** database resides in an isolated **Private Network** (spanning two Availability Zones), ensuring no direct internet access.
 *   **Storage**: An **S3 Bucket** stores user uploads (avatars), securely accessed via IAM Roles.
 *   **Monitoring**: A **CloudWatch Dashboard** provides visibility into CPU, Request Counts, and Health Status.
+    
+    ![CloudWatch Dashboard](cloudwatch_dashboard.png)
 
 ## Project Structure
 
 ```text
 Infrastructure/
 ├── architecture_diagram.png  # Visual representation of the architecture
+├── cloudwatch_dashboard.png  # Example of the CloudWatch Dashboard
 ├── network.tf                # VPC, Subnets, Gateways, Route Tables
 ├── ec2.tf                    # Security Groups, IAM Roles, Key Pairs
 ├── asg.tf                    # Launch Templates, Auto Scaling Group
